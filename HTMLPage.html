@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mobile Chat</title>      
+        <meta name = "viewport" content="width = device-width, initialize-scale = 1" />
+        <link rel = "stylesheet" href = "http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />    
+    </head>
+    <body>        
+        <div data-role = "page" id = "loginpage">
+            <div data-role = "header">
+                <h1>Chat</h1>
+            </div>
+            <div data-role = "content">
+                <h3>User ID</h3>
+                <input  id = "userID" />
+                <button id = "login">Start Chat</button>                
+            </div>
+        </div>
+        
+        <div data-role = "page" id = "lobypage">
+            <div data-role = "header">
+                <h1>Chat</h1>
+            </div>
+            <div data-role = "content">
+                <h3>Rooms</h3>
+                <a data-role = "button" class="joinButton" id="joinButton0" data-theme="a">empty</a>
+                <a data-role = "button" class="joinButton" id="joinButton1" data-theme="b">empty</a>
+                <a data-role = "button" class="joinButton" id="joinButton2" data-theme="c">empty</a>
+                <a data-role = "button" class="joinButton" id="joinButton3" data-theme="d">empty</a>
+                <a data-role = "button" class="joinButton" id="joinButton4" data-theme="e">empty</a>
+                <h3>Create Room</h3>
+                <input  id = "title" />
+                <a data-role = "button" id="createbutton">Create</a>
+            </div>
+        </div>
+                
+        <div data-role = "page" id = "chatpage">
+            <div data-role = "header">
+                <h1>Chat</h1>                
+            </div>
+            <div data-role = "content">                
+                <h3 id = "userList">Users</h3>
+                <input id = "text"/>
+                <button id = "chatButton">Chat</button>
+                <ul id = "chatul" data-role = "listview" data-insert = "true">
+                </ul>
+                <button id = "leaveButton">Leave</button>
+            </div>            
+        </div>
+
+
+        <script src="http://code.jquery.com/jquery-1.7.js"></script>
+        <script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+        
+        <script src="/socket.io/socket.io.js"></script> 
+        
+        <script>
+        $(window).load(function () {
+            var socket = io.connect();
+            var currentRoomID;
+            var userID;
+            var roomUserIDs;
+            
+            socket.on('notify', function (notify) {
+                alert(notify);
+            });     
+            
+            $('#login').click(function () {
+                socket.emit('login', $('#userID').val());
+            });           
+            
+            socket.on('login', function(_userID) {
+                userID = _userID;              
+            });
+
+            socket.on('enterLoby', function(roomList) {
+                location.href="#lobypage";
+                location.replace("#lobypage");
+
+                if (0 === roomList.length) {
+                    for (var i=0; i<5; i++) {
+                        var joinButtonID = '#joinButton' + i;
+                        $(joinButtonID).text('empty');                        
+                    }                    
+                }
+                else {
+                    for (var i in roomList) {
+                        var room = roomList[i];
+                        var joinButtonID = '#joinButton' + i;
+                        $(joinButtonID).text(room.title);
+                        $(joinButtonID).attr('roomID', room.id);
+                    }
+                }               
+            });
+
+            $('.joinButton').click(function () {
+                var joinRoom = {
+                    roomID : $(this).attr('roomID'),
+                    userID : $('#userID').val(),
+                };
+                socket.emit('joinRoom', joinRoom);
+            }); 
+
+            socket.on('joinRoom', function(command) {
+                if (command.userID === userID) {
+                    $('#chatul').empty();
+                    currentRoomID = command.roomID;
+
+                    location.href="#chatpage";
+                    location.replace("#chatpage");
+
+                    for (var i in command.chatList) {
+                        var chat = command.chatList[i];
+                        var output = '';
+                        output += '<li>';
+                        output += '     <h3>' + chat.userID + '</h3>';
+                        output += '     <p>' + chat.text + '</p>';
+                        output += '     <p>' + chat.date + '</p>';                
+                        output += '</li>';                    
+                        $(output).prependTo('#chatul');
+                    }
+                }
+
+                roomUserIDs = command.userIDs;
+                refreshUserList();
+            });
+
+            function refreshUserList() {
+                var userList = 'Users : ';
+                for (var i in roomUserIDs) {
+                    userList += roomUserIDs[i];
+
+                    if (i != roomUserIDs.length-1) {
+                        userList += ',';
+                    }            
+                }
+
+                $('#userList').text(userList);
+            }
+
+
+            $('#chatButton').click(function () {
+                socket.emit('chat', {
+                    roomID: currentRoomID,
+                    userID: userID,
+                    text: $('#text').val(),
+                    date: new Date().toUTCString()                    
+                });
+            });
+            
+            socket.on('chat', function (data) {
+                var output = '';
+                output += '<li>';
+                output += '     <h3>' + data.userID + '</h3>';
+                output += '     <p>' + data.text + '</p>';
+                output += '     <p>' + data.date + '</p>';                
+                output += '</li>';
+                
+                $(output).prependTo('#chatul');
+                $('#chatul').listview('refresh');
+            });          
+                        
+            $('#createbutton').click(function () {                
+                socket.emit('createRoom', {
+                    title:$('#title').val(),
+                    hostUserID: $('#userID').val()
+                });
+            });
+
+            $('#leaveButton').click(function () {     
+                socket.emit('leaveRoom', {
+                    roomID : currentRoomID,
+                    userID: userID                    
+                });
+            });
+
+            socket.on('leaveRoom', function (command) {                
+
+                if (command.userID === userID) {
+                    currentRoomID = null;
+
+                    location.href="#lobypage";
+                    location.replace("#lobypage"); 
+                }
+                else {
+                    roomUserIDs.splice(roomUserIDs.lastIndexOf(command.userID), 1);
+                    refreshUserList();
+                }
+            });
+            
+        });            
+        </script>       
+		
+    </body>
+</html>
