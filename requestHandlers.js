@@ -2,10 +2,10 @@ var querystring = require("querystring");
 var fs = require("fs");
 var formidable = require("formidable");
 
-function handle(server) {
-	server.get('/', start);
-	server.get('start', start);
-	server.get('faviconIco', faviconIco);
+function handle(app) {
+	app.get('/', start);
+	app.get('start', start);
+	app.get('faviconIco', faviconIco);
 }
 
 function start(request, response) {
