@@ -9,8 +9,9 @@ var url = require('url');
 
 // var redisURL = url.parse(process.env.REDISCLOUD_URL);
 // var redisClient = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
-// redisClient.auth(redisURL.auth.split(":")[1]);
+
 
 var redisClient = redis.createClient(6379, "54.250.134.172", {no_ready_check: true});
+redisClient.auth("mobileserver");
 
 server.start(requestHandlers.handle, socketHandlers.handle, redisClient);
