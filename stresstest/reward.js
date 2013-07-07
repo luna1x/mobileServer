@@ -1,6 +1,6 @@
 var stressTestSuite = require('./stressTestSuite');
 
-stressTestSuite.run(1, 10, function (i) {
+stressTestSuite.run(1, 10000, function (i) {
   var options = {
     hostname: '54.250.134.172',
     port: 8888,

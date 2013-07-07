@@ -15,9 +15,9 @@ function start(httpHandle, socketHandle) {
 
     httpHandle(app);
 
-    // io.sockets.on('connection', function (socket) {
-    //     socketHandle(io, socket);
-    // });
+    io.sockets.on('connection', function (socket) {
+        socketHandle(io, socket);
+    });
 }
 
 exports.start = start;

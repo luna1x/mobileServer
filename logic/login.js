@@ -65,6 +65,7 @@ function send(response, level, createDate)
 		createDate : createDate
 	};
 
+	response.writeHead(200, { 'Content-Type': 'text/html'});
 	response.end(JSON.stringify(info));
 }
 
