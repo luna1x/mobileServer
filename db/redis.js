@@ -1,7 +1,7 @@
 var redis = require('redis');
 
 function redisManager () {
-	var client = redis.createClient(6379, "54.250.134.172", {no_ready_check: true});
+	var client = redis.createClient(6379, "54.249.67.106", {no_ready_check: true});
 	client.auth("mobileserver");
 
 	var that = {};
