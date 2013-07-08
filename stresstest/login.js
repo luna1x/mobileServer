@@ -1,9 +1,9 @@
 var stressTestSuite = require('./stressTestSuite');
 
-stressTestSuite.run(1, 10, function (i) {
+stressTestSuite.run(1, 10000, function (i) {
   var options = {
-    // hostname: '54.250.134.172',
     hostname: 'localhost',
+    // hostname: '192.168.123.100',
     port: 8888,
     method: 'GET',
     path: '/login?platformID=1&phoneNumber='+i
