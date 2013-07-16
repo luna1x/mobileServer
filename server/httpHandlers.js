@@ -16,8 +16,12 @@ function faviconIco() {
 }
 
 function ping(request, response) {
+	var info = {
+		result : 'pong'
+	};
+
 	response.writeHead(200, { 'Content-Type': 'text/html'});
-	response.end('pong');
+	response.end(JSON.stringify(info));
 }
 
 exports.handle = handle;
