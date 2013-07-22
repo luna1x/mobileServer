@@ -23,39 +23,43 @@ function createAccount(redis, response, send, AIDKey)
 {
 	var redisMaster = redis.master();
 
-	redisMaster.incr('AID:gen', function(err, AID) {
-		redisMaster.hset('AID:lookup', AIDKey, AID, function (err) {
-			var level = 1;
-			var createDate = new Date().toUTCString();
+	// redisMaster.incr('AID:gen', function(err, AID) {
+	// 	redisMaster.hset('AID:lookup', AIDKey, AID, function (err) {
+	// 		var level = 1;
+	// 		var createDate = new Date().toUTCString();
 
-			var redisShard = redis.shard(AID);
-			var multi = redisShard.multi();
-			multi.hset('AID:'+AID, 'level', level);
-			multi.hset('AID:'+AID, 'createDate', createDate);
-			multi.exec(function (err, replies) {
-				if (err)
-					console.log(err);
+	// 		var redisShard = redis.shard(AID);
+	// 		var multi = redisShard.multi();
+	// 		multi.hset('AID:'+AID, 'level', level);
+	// 		multi.hset('AID:'+AID, 'createDate', createDate);
+	// 		multi.exec(function (err, replies) {
+	// 			if (err)
+	// 				console.log(err);
 
-				send(response, level, createDate);
-			});
-		});
-	});
+	// 			send(response, level, createDate);
+	// 		});
+	// 	});
+	// });
+
+	send(response, 1, 1);
 }
 
 function getAccount(redis, response, send, AID)
 {
-	var redisShard = redis.shard(AID);
+	// var redisShard = redis.shard(AID);
 
-	var multi = redisShard.multi();
-	multi.hget('AID:'+AID, 'level');
-	multi.hget('AID:'+AID, 'createDate');
+	// var multi = redisShard.multi();
+	// multi.hget('AID:'+AID, 'level');
+	// multi.hget('AID:'+AID, 'createDate');
 
-	multi.exec(function (err, replies) {
-		if (err)
-			console.log(err);
+	// multi.exec(function (err, replies) {
+	// 	if (err)
+	// 		console.log(err);
 
-		send(response, Number(replies[0]), replies[1]);
-	});
+	// 	send(response, Number(replies[0]), replies[1]);
+	// });
+
+	send(response, 1, 1);
 }
 
 function send(response, level, createDate)
