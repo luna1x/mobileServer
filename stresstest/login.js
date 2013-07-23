@@ -1,6 +1,6 @@
 var stressTestSuite = require('./stressTestSuite');
 
-stressTestSuite.run(1, 5000, function (i) {
+stressTestSuite.run(1, 1000, function (i) {
   var options = {
     // hostname: 'localhost',
     hostname: '54.249.67.106',
