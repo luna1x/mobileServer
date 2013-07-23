@@ -1,6 +1,10 @@
 var http = require('http');
 var cluster = require('cluster');
 var numCPUs = require('os').cpus().length;
+numCPUs = numCPUs * 3;
+
+var k = 0;
+var l = 0;
 
 function run (from, to, makeOptions)
 {
@@ -27,18 +31,26 @@ function run (from, to, makeOptions)
 function httpRequest (makeOptions,i) {
   var options = makeOptions(i);
   var reqDate = new Date();
-
+  
+  if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
+		10 == i || 2510 == i || 5010 == i || 7510 == i)
+	  console.log('req : ' + new Date().toUTCString() + ' , '  + i);
+  
+  
   var req = http.request(options, function(res) {
     // console.log('STATUS: ' + res.statusCode);
     // console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-      // console.log(i);
-      console.log(chunk);
-
+      // console.log(chunk);
+	  
       var resDate = new Date();
-      var responseTime =  resDate.getMilliseconds() - reqDate.getMilliseconds();
-      console.log('responseTime : ' + responseTime);
+      var responseTime =  resDate.getTime() - reqDate.getTime();
+      // console.log('responseTime : ' + responseTime);
+	  
+	if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
+		10 == i || 2510 == i || 5010 == i || 7510 == i)
+		console.log('response : ' + new Date().toUTCString() + ' , '  + i);
     });
   });
 
