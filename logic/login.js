@@ -4,22 +4,25 @@ function login(request, response) {
 	var platformID = request.param('platformID');
 	var phoneNumber = request.param('phoneNumber');
 
+	var i = phoneNumber;
+	if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
+	      10 == i || 2510 == i || 5010 == i || 7510 == i)
+		  console.log('req : ' + new Date() + ' , '  + i);
+
 	redis.AIDLookUP(platformID, phoneNumber, function (AIDKey, AID) {
 		if (null === AID)
 		{
-			console.log('create');
-			createAccount(redis, response, send, AIDKey);
+			createAccount(redis, response, send, AIDKey, i);
 		}
 		else
-		{
-			console.log('get');
-			getAccount(redis, response, send, AID);
+		{			
+			getAccount(redis, response, send, AID, i);
 		}
 	});
 }
 
 
-function createAccount(redis, response, send, AIDKey)
+function createAccount(redis, response, send, AIDKey, i)
 {
 	var redisMaster = redis.master();
 
@@ -41,10 +44,10 @@ function createAccount(redis, response, send, AIDKey)
 	// 	});
 	// });
 
-	send(response, 1, 1);
+	send(response, 1, 1, i);
 }
 
-function getAccount(redis, response, send, AID)
+function getAccount(redis, response, send, AID, i)
 {
 	// var redisShard = redis.shard(AID);
 
@@ -59,10 +62,12 @@ function getAccount(redis, response, send, AID)
 	// 	send(response, Number(replies[0]), replies[1]);
 	// });
 
-	send(response, 1, 1);
+	send(response, 1, 1, i);
+
+	
 }
 
-function send(response, level, createDate)
+function send(response, level, createDate, i)
 {
 	var info = {
 		level : level,
@@ -71,6 +76,10 @@ function send(response, level, createDate)
 
 	response.writeHead(200, { 'Content-Type': 'text/html'});
 	response.end(JSON.stringify(info));
+	
+	if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
+		10 == i || 2510 == i || 5010 == i || 7510 == i)
+		console.log('response : ' + new Date() + ' , '  + i);
 }
 
 exports.login = login;
