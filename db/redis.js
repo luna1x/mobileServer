@@ -1,10 +1,12 @@
 var redis = require('redis');
 
 function redisManager () {
+	/*
 	var client = redis.createClient(6379, "54.249.67.106", {no_ready_check: true});
 	client.auth("mobileserver");
-
+	*/
 	var that = {};
+	/*
 	that.shard = function (index) {
 		return client;
 	};
@@ -24,7 +26,7 @@ function redisManager () {
 	that.makeAIDKey = function (platformID, phoneNumber) {
 		return platformID+':'+phoneNumber;
 	};
-
+	*/
 
 	return that;
 }
