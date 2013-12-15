@@ -5,9 +5,9 @@ function login(request, response) {
 	var phoneNumber = request.param('phoneNumber');
 
 	var i = phoneNumber;
-	if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
-	      10 == i || 2510 == i || 5010 == i || 7510 == i)
-		  console.log('req : ' + new Date() + ' , '  + i);
+	// if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
+	//       10 == i || 2510 == i || 5010 == i || 7510 == i)
+	// 	  console.log('req : ' + new Date() + ' , '  + i);
 
 	redis.AIDLookUP(platformID, phoneNumber, function (AIDKey, AID) {
 		if (null === AID)
@@ -77,9 +77,9 @@ function send(response, level, createDate, i)
 	response.writeHead(200, { 'Content-Type': 'text/html'});
 	response.end(JSON.stringify(info));
 	
-	if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
-		10 == i || 2510 == i || 5010 == i || 7510 == i)
-		console.log('response : ' + new Date() + ' , '  + i);
+	// if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
+	// 	10 == i || 2510 == i || 5010 == i || 7510 == i)
+	// 	console.log('response : ' + new Date() + ' , '  + i);
 }
 
 exports.login = login;

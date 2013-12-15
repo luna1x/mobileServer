@@ -32,9 +32,9 @@ function httpRequest (makeOptions,i) {
   var options = makeOptions(i);
   var reqDate = new Date();
   
-  if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
-		10 == i || 2510 == i || 5010 == i || 7510 == i)
-	  console.log('req : ' + new Date().toUTCString() + ' , '  + i);
+  // if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
+		// 10 == i || 2510 == i || 5010 == i || 7510 == i)
+	 //  console.log('req : ' + new Date().toUTCString() + ' , '  + i);
   
   
   var req = http.request(options, function(res) {
@@ -44,17 +44,17 @@ function httpRequest (makeOptions,i) {
     res.on('data', function (chunk) {
       // console.log(chunk);
 	  
-      var resDate = new Date();
-      var responseTime =  resDate.getTime() - reqDate.getTime();
-	  // console.log('responseTime : ' + responseTime);
+    var resDate = new Date();
+    var responseTime =  resDate.getTime() - reqDate.getTime();
+	  console.log('responseTime : ' + responseTime);
 	  
       
 	  
-	if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
-		10 == i || 2510 == i || 5010 == i || 7510 == i || 1000 == i) {
-		console.log('response : ' + new Date().toUTCString() + ' , '  + i);		
-		}
-    });
+	// if (2490 == i || 4990 == i || 7490 == i || 9990 == i ||
+	// 	10 == i || 2510 == i || 5010 == i || 7510 == i || 1000 == i) {
+	// 	console.log('response : ' + new Date().toUTCString() + ' , '  + i);		
+	// 	}
+ //    });
   });
 
   req.on('error', function(e) {
